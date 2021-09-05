@@ -1,15 +1,14 @@
 clear all;
 
-numerOfWorkingDays = 31;
-
+%% Reading data
 T = readtable('MonthlyRep.csv');
 tData = table2dataset(T);
 tData = sortrows(tData,3);
-
 Tname = readtable('BaghNames.xlsx');
 tName = sortrows(table2dataset(Tname),3);
 
-            
+%% Variable and data structure initialization 
+numerOfWorkingDays = 31;           
 name = cell(length(tData.CardCode), 2);
 name (:) = {'String'};
 hozor = nan(length(tData.CardCode), 2);
@@ -25,6 +24,7 @@ ayabZahab = nan(length(tData.CardCode), 1);
 karkard = numerOfWorkingDays.*(ones(length(tData.CardCode),1));
 dummyColumn = zeros(length(tData.CardCode), 1);
 
+%% Fetching data and grooming
 for i=1:length(tData.CardCode)
     % Saate ezafekari bedune mohasebeye dirkard
     tempEz = str2mat(tData.Parametr1(i));
@@ -103,20 +103,14 @@ for i=1:length(tData.CardCode)
 end
 
 
-% myTable2 = table(str2num(cell2mat(tData.CardCode)), name, karkard, ayabZahab, ezNew, mSaati, 'VariableNames',{'CardCode' 'Name' 'Karkard' 'AyabZahab' 'EZkoll' 'M_Saati'});
+
 myTable2 = table(str2num(cell2mat(tData.CardCode)), tName.name, tName.fname, karkard, ayabZahab, ezNew, mSaati, mRuz, 'VariableNames',{'CardCode' 'Name' 'fName' 'Karkard' 'AyabZahab' 'EZkoll' 'M_Saati' 'M_Ruz'});
-% myTable2.CardCode(47:end)=myTable2.CardCode(47:end)-1;  %cardcode mismatch correction
-% myTable3 = sortrows (myTable2,1);
-% myTable4 = table(mRuz, mSaatiFinal, mSaati, dummyColumn, dummyColumn, ezKolFinal, ezNew, ayabZahab, karkard, tName.fname, tName.name, str2num(cell2mat(tData.CardCode)),...
-%                 'VariableNames',{'M_Ruz' 'M_Saati' 'mSaatiCont' 'Gheybat' 'KasrKar' 'EZkoll' 'EZkolCont' 'AyabZahab' 'Karkard' 'fName' 'Name' 'CardCode'});
 myTable4 = table(mRuz, mSaatiFinal, dummyColumn, dummyColumn, ezKolFinal, ayabZahab, karkard, tName.fname, tName.name, str2num(cell2mat(tData.CardCode)),...
                 'VariableNames',{'M_Ruz' 'M_Saati' 'Gheybat' 'KasrKar' 'EZkoll' 'AyabZahab' 'Karkard' 'fName' 'Name' 'CardCode'});
-% myTable4.CardCode(47:end)=myTable4.CardCode(47:end)-1;  %cardcode mismatch correction
 
 filename = 'outputData.xlsx';
-% writetable(myTable2,filename,'Sheet',1,'Range','D1')
 writetable(myTable2,filename,'Sheet',1);
-% writetable(myTable2(),filename,'Sheet',2);
+
 
 tempNameCode = [tData.CardCode, name];
 tempNameCode2 = cell(size(tName));
@@ -126,7 +120,7 @@ tempNameCode2 = sortrows(tempNameCode2);
 
 
 
-%% Generate Sheets
+%% Generate Sheets based on the designate name list
 
 CodeMoaven = [281; 237; 614];
 CodeModir = [242; 173];
@@ -164,5 +158,4 @@ for i=1:9
     writetable(tTempStrip,filename2,'Sheet',i+1);
     i=i+1;
 end
-
 
